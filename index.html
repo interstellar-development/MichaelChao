@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -466,8 +467,17 @@
 <div class="footer">Made with 💙 for a very excited new dad &nbsp;·&nbsp; Share this page with everyone!</div>
 
 <script>
-  // ---- STORAGE KEY ----
-  const STORAGE_KEY = 'baby-card-messages-v1';
+  // ---- FLAT JSON MESSAGE STORE ----
+  // Messages live here. Add entries to this array to pre-populate the card.
+  let messages = [
+    {
+      "name": "The Team",
+      "relation": "Your colleagues",
+      "message": "We're all so excited for you! Wishing you and your growing family all the joy in the world. Congratulations on this incredible new chapter!",
+      "emoji": "🎉",
+      "date": "April 24, 2026"
+    }
+  ];
 
   // ---- STARS / CONFETTI ----
   const confettiArea = document.getElementById('confettiArea');
@@ -503,19 +513,9 @@
   // ---- ACCENT COLORS ----
   const accents = ['accent-blue', 'accent-peach', 'accent-sage', 'accent-gold'];
 
-  // ---- LOAD MESSAGES ----
-  async function loadMessages() {
+  // ---- RENDER ----
+  function renderMessages() {
     const container = document.getElementById('messagesContainer');
-    try {
-      const result = await window.storage.get(STORAGE_KEY, true);
-      const messages = result ? JSON.parse(result.value) : [];
-      renderMessages(messages, container);
-    } catch (e) {
-      renderMessages([], container);
-    }
-  }
-
-  function renderMessages(messages, container) {
     if (!messages.length) {
       container.innerHTML = `<div class="empty-state"><div class="big-emoji">✉️</div><p>No messages yet — be the first to sign the card!</p></div>`;
       return;
@@ -526,7 +526,7 @@
         <div class="msg-header">
           <span class="msg-emoji">${m.emoji || '🎉'}</span>
           <div>
-            <div class="msg-name">${escapeHtml(m.name)}${m.relation ? ' <span style="font-weight:400;font-size:0.88rem;color:#7a94b8;">· ${escapeHtml(m.relation)}</span>' : ''}</div>
+            <div class="msg-name">${escapeHtml(m.name)}${m.relation ? ' <span style="font-weight:400;font-size:0.88rem;color:#7a94b8;">· ' + escapeHtml(m.relation) + '</span>' : ''}</div>
             <div class="msg-date">${m.date}</div>
           </div>
         </div>
@@ -540,7 +540,7 @@
   }
 
   // ---- SUBMIT ----
-  async function submitMessage() {
+  function submitMessage() {
     const name = document.getElementById('nameInput').value.trim();
     const relation = document.getElementById('relationInput').value.trim();
     const message = document.getElementById('messageInput').value.trim();
@@ -550,41 +550,30 @@
     if (!name) { document.getElementById('nameInput').focus(); return; }
     if (!message) { msgInput.focus(); return; }
 
-    btn.disabled = true;
-    btn.textContent = 'Sending…';
-
     const now = new Date();
     const dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
-    let messages = [];
-    try {
-      const result = await window.storage.get(STORAGE_KEY, true);
-      if (result) messages = JSON.parse(result.value);
-    } catch(e) {}
-
+    // Push into the flat JSON array
     messages.push({ name, relation, message, emoji: selectedEmoji, date: dateStr });
 
-    try {
-      await window.storage.set(STORAGE_KEY, JSON.stringify(messages), true);
-      document.getElementById('nameInput').value = '';
-      document.getElementById('relationInput').value = '';
-      msgInput.value = '';
-      charCount.textContent = '0 / 500';
-      successMsg.style.display = 'block';
-      setTimeout(() => successMsg.style.display = 'none', 3500);
-      loadMessages();
-    } catch(e) {
-      alert('Something went wrong. Please try again.');
-    }
+    // Clear form
+    document.getElementById('nameInput').value = '';
+    document.getElementById('relationInput').value = '';
+    msgInput.value = '';
+    charCount.textContent = '0 / 500';
 
-    btn.disabled = false;
-    btn.textContent = 'Send my message 🕊️';
+    // Show success
+    successMsg.style.display = 'block';
+    setTimeout(() => successMsg.style.display = 'none', 3500);
+
+    // Re-render messages
+    renderMessages();
   }
 
   // Enter key support
   document.getElementById('nameInput').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('relationInput').focus(); });
 
-  loadMessages();
+  renderMessages();
 </script>
 </body>
 </html>
