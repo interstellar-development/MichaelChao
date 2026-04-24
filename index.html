@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baby on the Way! 🍼</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --cream: #FFF8F0;
+    --warm-peach: #FDEBD0;
+    --soft-blue: #D6EAF8;
+    --blush: #FADBD8;
+    --gold: #F0C040;
+    --deep-navy: #1A2A4A;
+    --soft-navy: #2E4070;
+    --sage: #A8D5BA;
+    --text-dark: #2C3E50;
+    --text-mid: #5D6D7E;
+    --white: #FFFFFF;
+  }
+
+  body {
+    font-family: 'Lato', sans-serif;
+    background: linear-gradient(135deg, #e8f4fd 0%, #fff8f0 40%, #fdebd0 70%, #fadbd8 100%);
+    min-height: 100vh;
+    color: var(--text-dark);
+  }
+
+  /* ---- HERO ---- */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    padding: 60px 20px 40px;
+    background: linear-gradient(180deg, #d6eaf8 0%, #fff8f0 100%);
+  }
+
+  .clouds {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 120px;
+    overflow: hidden;
+  }
+
+  .cloud {
+    position: absolute;
+    background: white;
+    border-radius: 50px;
+    opacity: 0.7;
+  }
+  .cloud::before, .cloud::after {
+    content: '';
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+  }
+  .cloud1 { width: 120px; height: 40px; top: 20px; left: -140px; animation: cloudMove 18s linear infinite; }
+  .cloud1::before { width: 60px; height: 60px; top: -30px; left: 15px; }
+  .cloud1::after { width: 40px; height: 40px; top: -20px; left: 55px; }
+
+  .cloud2 { width: 80px; height: 28px; top: 50px; left: -100px; animation: cloudMove 26s linear infinite 4s; opacity: 0.5; }
+  .cloud2::before { width: 40px; height: 40px; top: -20px; left: 10px; }
+  .cloud2::after { width: 30px; height: 30px; top: -15px; left: 38px; }
+
+  .cloud3 { width: 100px; height: 34px; top: 10px; left: -120px; animation: cloudMove 22s linear infinite 10s; opacity: 0.6; }
+  .cloud3::before { width: 50px; height: 50px; top: -25px; left: 12px; }
+  .cloud3::after { width: 35px; height: 35px; top: -18px; left: 48px; }
+
+  @keyframes cloudMove {
+    from { transform: translateX(0); }
+    to { transform: translateX(calc(100vw + 200px)); }
+  }
+
+  /* STORK SVG */
+  .stork-container {
+    position: relative;
+    display: inline-block;
+    animation: storkFloat 4s ease-in-out infinite;
+    filter: drop-shadow(0 8px 24px rgba(100,150,220,0.18));
+  }
+  @keyframes storkFloat {
+    0%, 100% { transform: translateY(0px) rotate(-2deg); }
+    50% { transform: translateY(-18px) rotate(2deg); }
+  }
+
+  .wing-left { animation: wingFlap 0.6s ease-in-out infinite alternate; transform-origin: 50% 50%; }
+  .wing-right { animation: wingFlap 0.6s ease-in-out infinite alternate-reverse; transform-origin: 50% 50%; }
+  @keyframes wingFlap {
+    from { transform: rotate(-8deg); }
+    to { transform: rotate(8deg); }
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    color: var(--soft-navy);
+    margin-top: 24px;
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: #e07b54;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-mid);
+    margin-top: 12px;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+
+  .badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #f9ca74, #f0a845);
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 20px;
+    border-radius: 20px;
+    margin-top: 18px;
+    box-shadow: 0 4px 15px rgba(240,168,69,0.35);
+  }
+
+  /* ---- STARS / CONFETTI ---- */
+  .confetti-area {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .star {
+    position: absolute;
+    font-size: 18px;
+    animation: twinkle 3s ease-in-out infinite;
+    opacity: 0;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0; transform: scale(0.5); }
+    50% { opacity: 1; transform: scale(1); }
+  }
+
+  /* ---- DIVIDER ---- */
+  .wave-divider {
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+  }
+
+  /* ---- GUESTBOOK ---- */
+  .guestbook-section {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 50px 20px 80px;
+  }
+
+  .section-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--soft-navy);
+    text-align: center;
+    margin-bottom: 6px;
+  }
+  .section-sub {
+    text-align: center;
+    color: var(--text-mid);
+    font-size: 0.95rem;
+    margin-bottom: 36px;
+  }
+
+  /* Write form */
+  .write-card {
+    background: white;
+    border-radius: 20px;
+    padding: 32px 32px 28px;
+    box-shadow: 0 8px 40px rgba(46,64,112,0.09);
+    margin-bottom: 40px;
+  }
+  .write-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: var(--soft-navy);
+    margin-bottom: 20px;
+  }
+
+  .form-row {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .form-row input, .form-row select {
+    flex: 1;
+    min-width: 140px;
+    padding: 12px 16px;
+    border: 1.5px solid #e0e8f0;
+    border-radius: 12px;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    background: #f8fbfe;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+  .form-row input:focus, textarea:focus {
+    border-color: #378ADD;
+    box-shadow: 0 0 0 3px rgba(55,138,221,0.12);
+  }
+
+  textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1.5px solid #e0e8f0;
+    border-radius: 12px;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    background: #f8fbfe;
+    resize: vertical;
+    min-height: 110px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .emoji-picker {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .emoji-btn {
+    font-size: 1.4rem;
+    background: #f0f6ff;
+    border: 1.5px solid #d8e8f8;
+    border-radius: 10px;
+    width: 44px; height: 44px;
+    cursor: pointer;
+    transition: transform 0.15s, background 0.15s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .emoji-btn:hover, .emoji-btn.selected { background: #d6eaf8; transform: scale(1.15); border-color: #378ADD; }
+
+  .submit-btn {
+    background: linear-gradient(135deg, #2E4070, #4a69a0);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 13px 34px;
+    font-family: 'Lato', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+    box-shadow: 0 4px 18px rgba(46,64,112,0.25);
+  }
+  .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 7px 24px rgba(46,64,112,0.32); }
+  .submit-btn:active { transform: scale(0.97); }
+  .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  .success-msg {
+    display: none;
+    background: linear-gradient(135deg, #e8f8f0, #d5f2e3);
+    border: 1px solid #a8d5ba;
+    border-radius: 12px;
+    padding: 14px 20px;
+    color: #1a5c38;
+    font-size: 0.95rem;
+    margin-top: 14px;
+    text-align: center;
+  }
+
+  /* Messages */
+  .messages-area { display: flex; flex-direction: column; gap: 20px; }
+
+  .message-card {
+    background: white;
+    border-radius: 18px;
+    padding: 22px 26px 18px;
+    box-shadow: 0 4px 20px rgba(46,64,112,0.07);
+    position: relative;
+    overflow: hidden;
+    animation: cardIn 0.4s ease-out both;
+  }
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .message-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 5px;
+    height: 100%;
+    border-radius: 4px 0 0 4px;
+  }
+  .accent-blue::before { background: linear-gradient(180deg, #5ba3e0, #2E4070); }
+  .accent-peach::before { background: linear-gradient(180deg, #f0a07a, #e07b54); }
+  .accent-sage::before { background: linear-gradient(180deg, #a8d5ba, #5cb88a); }
+  .accent-gold::before { background: linear-gradient(180deg, #f9d07a, #f0a845); }
+
+  .msg-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .msg-emoji { font-size: 1.6rem; }
+  .msg-name { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--soft-navy); font-weight: 700; }
+  .msg-date { font-size: 0.78rem; color: var(--text-mid); margin-top: 1px; }
+  .msg-body { font-size: 0.97rem; color: var(--text-dark); line-height: 1.7; white-space: pre-wrap; }
+
+  .empty-state {
+    text-align: center;
+    padding: 50px 20px;
+    color: var(--text-mid);
+  }
+  .empty-state .big-emoji { font-size: 3.5rem; margin-bottom: 14px; }
+  .empty-state p { font-size: 1.05rem; }
+
+  .loading-state {
+    text-align: center;
+    padding: 30px;
+    color: var(--text-mid);
+    font-style: italic;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 24px 20px 40px;
+    color: var(--text-mid);
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: 540px) {
+    .write-card { padding: 22px 18px; }
+    .hero-title { font-size: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="confetti-area" id="confettiArea"></div>
+  <div class="clouds">
+    <div class="cloud cloud1"></div>
+    <div class="cloud cloud2"></div>
+    <div class="cloud cloud3"></div>
+  </div>
+
+  <!-- STORK SVG -->
+  <div class="stork-container">
+    <svg width="260" height="200" viewBox="0 0 260 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Bundle / sack -->
+      <ellipse cx="175" cy="130" rx="36" ry="30" fill="#FDEBD0" stroke="#e8c49a" stroke-width="1.5"/>
+      <ellipse cx="175" cy="100" rx="5" ry="5" fill="#e07b54"/>
+      <line x1="175" y1="105" x2="175" y2="118" stroke="#e07b54" stroke-width="2" stroke-linecap="round"/>
+      <!-- polka dots on bundle -->
+      <circle cx="166" cy="128" r="4" fill="#FADBD8"/>
+      <circle cx="178" cy="120" r="3" fill="#D6EAF8"/>
+      <circle cx="185" cy="135" r="4" fill="#D6EAF8"/>
+      <circle cx="165" cy="142" r="3" fill="#FADBD8"/>
+      <!-- ribbon -->
+      <path d="M148 120 Q175 108 202 120" stroke="#e07b54" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+      <!-- Body -->
+      <ellipse cx="110" cy="110" rx="42" ry="28" fill="white" stroke="#d8e8f8" stroke-width="1"/>
+
+      <!-- Left wing -->
+      <g class="wing-left">
+        <path d="M90 105 Q60 80 40 90 Q65 100 90 115Z" fill="#d6eaf8" stroke="#b0d0f0" stroke-width="1"/>
+        <path d="M88 108 Q62 85 44 94" stroke="#98c0e8" stroke-width="0.8" fill="none"/>
+      </g>
+      <!-- Right wing -->
+      <g class="wing-right">
+        <path d="M128 105 Q158 80 178 90 Q153 100 128 115Z" fill="#d6eaf8" stroke="#b0d0f0" stroke-width="1"/>
+        <path d="M130 108 Q156 85 174 94" stroke="#98c0e8" stroke-width="0.8" fill="none"/>
+      </g>
+
+      <!-- Neck -->
+      <path d="M108 85 Q112 60 118 50" stroke="white" stroke-width="16" stroke-linecap="round" fill="none"/>
+      <path d="M108 85 Q112 60 118 50" stroke="#d8e8f8" stroke-width="14" stroke-linecap="round" fill="none"/>
+
+      <!-- Head -->
+      <circle cx="120" cy="46" r="18" fill="white" stroke="#d8e8f8" stroke-width="1"/>
+      <!-- Black head patch -->
+      <path d="M108 36 Q120 28 132 36 Q128 50 120 52 Q112 50 108 36Z" fill="#1A2A4A"/>
+      <!-- Eye -->
+      <circle cx="124" cy="40" r="3.5" fill="white"/>
+      <circle cx="125" cy="40" r="2" fill="#1A2A4A"/>
+      <circle cx="125.8" cy="39.2" r="0.7" fill="white"/>
+      <!-- Beak -->
+      <path d="M132 46 L150 50 L132 54Z" fill="#f0a845"/>
+      <line x1="132" y1="50" x2="150" y2="50" stroke="#e09030" stroke-width="0.8"/>
+
+      <!-- Legs -->
+      <line x1="100" y1="136" x2="96" y2="168" stroke="#f0a845" stroke-width="3.5" stroke-linecap="round"/>
+      <line x1="120" y1="136" x2="124" y2="168" stroke="#f0a845" stroke-width="3.5" stroke-linecap="round"/>
+      <!-- Feet -->
+      <path d="M90 168 L96 168 L102 168" stroke="#f0a845" stroke-width="3" stroke-linecap="round"/>
+      <path d="M118 168 L124 168 L130 168" stroke="#f0a845" stroke-width="3" stroke-linecap="round"/>
+      <line x1="86" y1="172" x2="96" y2="168" stroke="#f0a845" stroke-width="2" stroke-linecap="round"/>
+      <line x1="120" y1="172" x2="124" y2="168" stroke="#f0a845" stroke-width="2" stroke-linecap="round"/>
+
+      <!-- Beak holding string -->
+      <line x1="149" y1="50" x2="175" y2="105" stroke="#1A2A4A" stroke-width="1.8" stroke-dasharray="4,3" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <div class="badge">✨ A Baby is Coming! ✨</div>
+  <h1 class="hero-title">
+    Congratulations,<br><em>New Dad!</em>
+  </h1>
+  <p class="hero-subtitle">Leave your warmest wishes below — he'll treasure every one.</p>
+</div>
+
+<!-- Wave divider -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 60" style="display:block;margin-top:-2px;">
+  <path fill="#FFF8F0" d="M0,30 C240,60 480,0 720,30 C960,60 1200,0 1440,30 L1440,60 L0,60 Z"/>
+</svg>
+
+<!-- GUESTBOOK -->
+<div class="guestbook-section">
+  <h2 class="section-heading">📬 Sign the Card</h2>
+  <p class="section-sub">Share your love, advice, or a funny prediction!</p>
+
+  <div class="write-card">
+    <h3>Write your message</h3>
+    <div class="form-row">
+      <input type="text" id="nameInput" placeholder="Your name" maxlength="50"/>
+      <input type="text" id="relationInput" placeholder="e.g. Colleague, Friend..." maxlength="40"/>
+    </div>
+
+    <div class="emoji-picker" id="emojiPicker">
+      <button class="emoji-btn selected" data-emoji="🎉" title="Celebration">🎉</button>
+      <button class="emoji-btn" data-emoji="👶" title="Baby">👶</button>
+      <button class="emoji-btn" data-emoji="💙" title="Love">💙</button>
+      <button class="emoji-btn" data-emoji="🍼" title="Bottle">🍼</button>
+      <button class="emoji-btn" data-emoji="⭐" title="Star">⭐</button>
+      <button class="emoji-btn" data-emoji="🎈" title="Balloon">🎈</button>
+      <button class="emoji-btn" data-emoji="🌟" title="Sparkle">🌟</button>
+      <button class="emoji-btn" data-emoji="🤗" title="Hug">🤗</button>
+    </div>
+
+    <textarea id="messageInput" placeholder="Write something wonderful… a wish, a funny prediction, or your best dad advice! 😄" maxlength="500"></textarea>
+
+    <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+      <button class="submit-btn" id="submitBtn" onclick="submitMessage()">Send my message 🕊️</button>
+      <span id="charCount" style="font-size:0.82rem; color:#8da0b8;">0 / 500</span>
+    </div>
+    <div class="success-msg" id="successMsg">🎉 Your message has been added to the card!</div>
+  </div>
+
+  <!-- Messages list -->
+  <div id="messagesContainer">
+    <div class="loading-state">Loading messages…</div>
+  </div>
+</div>
+
+<div class="footer">Made with 💙 for a very excited new dad &nbsp;·&nbsp; Share this page with everyone!</div>
+
+<script>
+  // ---- STORAGE KEY ----
+  const STORAGE_KEY = 'baby-card-messages-v1';
+
+  // ---- STARS / CONFETTI ----
+  const confettiArea = document.getElementById('confettiArea');
+  const starEmojis = ['✨','⭐','🌟','💫','🎀','🎉'];
+  for (let i = 0; i < 18; i++) {
+    const s = document.createElement('span');
+    s.className = 'star';
+    s.textContent = starEmojis[Math.floor(Math.random() * starEmojis.length)];
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = Math.random() * 80 + '%';
+    s.style.animationDelay = (Math.random() * 3) + 's';
+    s.style.animationDuration = (2 + Math.random() * 2) + 's';
+    confettiArea.appendChild(s);
+  }
+
+  // ---- EMOJI PICKER ----
+  let selectedEmoji = '🎉';
+  document.querySelectorAll('.emoji-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedEmoji = btn.dataset.emoji;
+    });
+  });
+
+  // ---- CHAR COUNT ----
+  const msgInput = document.getElementById('messageInput');
+  const charCount = document.getElementById('charCount');
+  msgInput.addEventListener('input', () => {
+    charCount.textContent = msgInput.value.length + ' / 500';
+  });
+
+  // ---- ACCENT COLORS ----
+  const accents = ['accent-blue', 'accent-peach', 'accent-sage', 'accent-gold'];
+
+  // ---- LOAD MESSAGES ----
+  async function loadMessages() {
+    const container = document.getElementById('messagesContainer');
+    try {
+      const result = await window.storage.get(STORAGE_KEY, true);
+      const messages = result ? JSON.parse(result.value) : [];
+      renderMessages(messages, container);
+    } catch (e) {
+      renderMessages([], container);
+    }
+  }
+
+  function renderMessages(messages, container) {
+    if (!messages.length) {
+      container.innerHTML = `<div class="empty-state"><div class="big-emoji">✉️</div><p>No messages yet — be the first to sign the card!</p></div>`;
+      return;
+    }
+    const reversed = [...messages].reverse();
+    container.innerHTML = reversed.map((m, i) => `
+      <div class="message-card ${accents[i % 4]}" style="animation-delay:${i * 0.07}s">
+        <div class="msg-header">
+          <span class="msg-emoji">${m.emoji || '🎉'}</span>
+          <div>
+            <div class="msg-name">${escapeHtml(m.name)}${m.relation ? ' <span style="font-weight:400;font-size:0.88rem;color:#7a94b8;">· ${escapeHtml(m.relation)}</span>' : ''}</div>
+            <div class="msg-date">${m.date}</div>
+          </div>
+        </div>
+        <div class="msg-body">${escapeHtml(m.message)}</div>
+      </div>
+    `).join('');
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ---- SUBMIT ----
+  async function submitMessage() {
+    const name = document.getElementById('nameInput').value.trim();
+    const relation = document.getElementById('relationInput').value.trim();
+    const message = document.getElementById('messageInput').value.trim();
+    const btn = document.getElementById('submitBtn');
+    const successMsg = document.getElementById('successMsg');
+
+    if (!name) { document.getElementById('nameInput').focus(); return; }
+    if (!message) { msgInput.focus(); return; }
+
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+    let messages = [];
+    try {
+      const result = await window.storage.get(STORAGE_KEY, true);
+      if (result) messages = JSON.parse(result.value);
+    } catch(e) {}
+
+    messages.push({ name, relation, message, emoji: selectedEmoji, date: dateStr });
+
+    try {
+      await window.storage.set(STORAGE_KEY, JSON.stringify(messages), true);
+      document.getElementById('nameInput').value = '';
+      document.getElementById('relationInput').value = '';
+      msgInput.value = '';
+      charCount.textContent = '0 / 500';
+      successMsg.style.display = 'block';
+      setTimeout(() => successMsg.style.display = 'none', 3500);
+      loadMessages();
+    } catch(e) {
+      alert('Something went wrong. Please try again.');
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Send my message 🕊️';
+  }
+
+  // Enter key support
+  document.getElementById('nameInput').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('relationInput').focus(); });
+
+  loadMessages();
+</script>
+</body>
+</html>
