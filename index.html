@@ -466,18 +466,24 @@
 
 <div class="footer">Made with 💙 for a very excited new dad &nbsp;·&nbsp; Share this page with everyone!</div>
 
-<script>
-  // ---- FLAT JSON MESSAGE STORE ----
-  // Messages live here. Add entries to this array to pre-populate the card.
-  let messages = [
-    {
-      "name": "The Team",
-      "relation": "Your colleagues",
-      "message": "We're all so excited for you! Wishing you and your growing family all the joy in the world. Congratulations on this incredible new chapter!",
-      "emoji": "🎉",
-      "date": "April 24, 2026"
-    }
-  ];
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, onSnapshot, orderBy, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  // ---- FIREBASE CONFIG ----
+  const firebaseConfig = {
+    apiKey: "AIzaSyCSft4-kNb2SZgKHnZJzsQyqYX5ML63pRs",
+    authDomain: "congrats-297c3.firebaseapp.com",
+    projectId: "congrats-297c3",
+    storageBucket: "congrats-297c3.firebasestorage.app",
+    messagingSenderId: "864097962577",
+    appId: "1:864097962577:web:1d2b78da96f28042c8c670",
+    measurementId: "G-Y8SR49S7XW"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const messagesRef = collection(db, "messages");
 
   // ---- STARS / CONFETTI ----
   const confettiArea = document.getElementById('confettiArea');
@@ -513,34 +519,38 @@
   // ---- ACCENT COLORS ----
   const accents = ['accent-blue', 'accent-peach', 'accent-sage', 'accent-gold'];
 
-  // ---- RENDER ----
-  function renderMessages() {
-    const container = document.getElementById('messagesContainer');
-    if (!messages.length) {
-      container.innerHTML = `<div class="empty-state"><div class="big-emoji">✉️</div><p>No messages yet — be the first to sign the card!</p></div>`;
-      return;
-    }
-    const reversed = [...messages].reverse();
-    container.innerHTML = reversed.map((m, i) => `
-      <div class="message-card ${accents[i % 4]}" style="animation-delay:${i * 0.07}s">
-        <div class="msg-header">
-          <span class="msg-emoji">${m.emoji || '🎉'}</span>
-          <div>
-            <div class="msg-name">${escapeHtml(m.name)}${m.relation ? ' <span style="font-weight:400;font-size:0.88rem;color:#7a94b8;">· ' + escapeHtml(m.relation) + '</span>' : ''}</div>
-            <div class="msg-date">${m.date}</div>
-          </div>
-        </div>
-        <div class="msg-body">${escapeHtml(m.message)}</div>
-      </div>
-    `).join('');
-  }
-
   function escapeHtml(s) {
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
+  // ---- REAL-TIME LISTENER ----
+  const q = query(messagesRef, orderBy("timestamp", "desc"));
+  onSnapshot(q, (snapshot) => {
+    const container = document.getElementById('messagesContainer');
+    if (snapshot.empty) {
+      container.innerHTML = `<div class="empty-state"><div class="big-emoji">✉️</div><p>No messages yet — be the first to sign the card!</p></div>`;
+      return;
+    }
+    container.innerHTML = snapshot.docs.map((doc, i) => {
+      const m = doc.data();
+      const date = m.timestamp ? new Date(m.timestamp.seconds * 1000).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Just now';
+      return `
+        <div class="message-card ${accents[i % 4]}" style="animation-delay:${i * 0.07}s">
+          <div class="msg-header">
+            <span class="msg-emoji">${m.emoji || '🎉'}</span>
+            <div>
+              <div class="msg-name">${escapeHtml(m.name)}${m.relation ? ' <span style="font-weight:400;font-size:0.88rem;color:#7a94b8;">· ' + escapeHtml(m.relation) + '</span>' : ''}</div>
+              <div class="msg-date">${date}</div>
+            </div>
+          </div>
+          <div class="msg-body">${escapeHtml(m.message)}</div>
+        </div>
+      `;
+    }).join('');
+  });
+
   // ---- SUBMIT ----
-  function submitMessage() {
+  window.submitMessage = async function() {
     const name = document.getElementById('nameInput').value.trim();
     const relation = document.getElementById('relationInput').value.trim();
     const message = document.getElementById('messageInput').value.trim();
@@ -550,30 +560,32 @@
     if (!name) { document.getElementById('nameInput').focus(); return; }
     if (!message) { msgInput.focus(); return; }
 
-    const now = new Date();
-    const dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
 
-    // Push into the flat JSON array
-    messages.push({ name, relation, message, emoji: selectedEmoji, date: dateStr });
+    try {
+      await addDoc(messagesRef, {
+        name, relation, message,
+        emoji: selectedEmoji,
+        timestamp: serverTimestamp()
+      });
 
-    // Clear form
-    document.getElementById('nameInput').value = '';
-    document.getElementById('relationInput').value = '';
-    msgInput.value = '';
-    charCount.textContent = '0 / 500';
+      document.getElementById('nameInput').value = '';
+      document.getElementById('relationInput').value = '';
+      msgInput.value = '';
+      charCount.textContent = '0 / 500';
+      successMsg.style.display = 'block';
+      setTimeout(() => successMsg.style.display = 'none', 3500);
+    } catch(e) {
+      alert('Something went wrong: ' + e.message);
+    }
 
-    // Show success
-    successMsg.style.display = 'block';
-    setTimeout(() => successMsg.style.display = 'none', 3500);
-
-    // Re-render messages
-    renderMessages();
+    btn.disabled = false;
+    btn.textContent = 'Send my message 🕊️';
   }
 
   // Enter key support
   document.getElementById('nameInput').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('relationInput').focus(); });
-
-  renderMessages();
 </script>
 </body>
 </html>
